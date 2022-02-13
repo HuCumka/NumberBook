@@ -31,7 +31,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(@NonNull CategoryAdapter.CategoryViewHolder holder, int position) {
         holder.contact_name.setText(contacts.get(position).getName());
-        holder.contact_number.setText(contacts.get(position).getName());
+        holder.contact_number.setText(contacts.get(position).getNumber());
     }
 
     @Override

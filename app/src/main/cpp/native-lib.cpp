@@ -15,7 +15,7 @@ Java_com_dominigames_numberbook_MainActivity_contact_1name_1list(JNIEnv* env, jo
                                             env->FindClass("java/lang/String"),
                                             env->NewStringUTF(""));
 
-    for(int i = 0;i < 3;i++) {
+    for(int i = 0; i < 3; i++) {
         env->SetObjectArrayElement(
                 ret,i,env->NewStringUTF(message[i]));
     }
@@ -38,7 +38,7 @@ Java_com_dominigames_numberbook_MainActivity_contact_1number_1list
                                            env->FindClass("java/lang/String"),
                                            env->NewStringUTF(""));
 
-    for(i = 0;i < 3;i++) {
+    for(i = 0; i < 3; i++) {
         env->SetObjectArrayElement(
                 ret,i,env->NewStringUTF(message[i]));
     }

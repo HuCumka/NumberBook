@@ -1,10 +1,15 @@
 package com.dominigames.numberbook;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dominigames.numberbook.databinding.ActivityMainBinding;
@@ -17,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView contactsRecycler;
     CategoryAdapter contactsAdapter;
     MainActivity contacts;
+    ImageView aboutImage;
 
 
     static {
@@ -32,27 +38,33 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        String[] contactNameList = contact_name_list();
+        String[] contactNumberList = contact_number_list();
         List<Category> contactsList = new ArrayList<>();
         for(int i = 0; i < 3; i++) {
-            contactsList.add(new Category(i + 1, contact_name_list()[i], contact_number_list()[i]));
+            contactsList.add(new Category(i + 1, contactNameList[i], contactNumberList[i]));
         }
 
         setContactsRecycler(contactsList);
 
-        StringBuffer infoBuffer = new StringBuffer();
-
-        infoBuffer.append("Model :" + Build.MODEL + "\n");//The end-user-visible name for the end product.
-        infoBuffer.append("Device: " + Build.DEVICE + "\n");//The name of the industrial design.
-        infoBuffer.append("Manufacturer: " + Build.MANUFACTURER + "\n");//The manufacturer of the product/hardware.
-        infoBuffer.append("Board: " + Build.BOARD + "\n");//The name of the underlying board, like "goldfish".
-        infoBuffer.append("Brand: " + Build.BRAND + "\n");//The consumer-visible brand with which the product/hardware will be associated, if any.
-        infoBuffer.append("Serial: " + Build.SERIAL + "\n");
+        aboutImage = findViewById(R.id.aboutButton);
+        aboutImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Button");
+                Intent intent = new Intent(MainActivity.this, AboutDevicePage.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
     private void setContactsRecycler(List<Category> contactsList) {
 
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+
         contactsRecycler = findViewById(R.id.contactsRecycler);
+        contactsRecycler.setLayoutManager(layoutManager);
 
         contactsAdapter = new CategoryAdapter(this, contactsList);
         contactsRecycler.setAdapter(contactsAdapter);
