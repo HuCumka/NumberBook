@@ -24,9 +24,10 @@ public class AboutDevicePage extends AppCompatActivity {
         StringBuffer infoBuffer = new StringBuffer();
 
         infoBuffer.append("Бренд: " + Build.BRAND + "\n");
-        infoBuffer.append("Модель :" + Build.MODEL + "\n");
-        infoBuffer.append("Версия операционной системы" + Build.ID + "\n");
+        infoBuffer.append("Модель : " + Build.MODEL + "\n");
+        infoBuffer.append("Версия операционной системы: " + Build.ID + "\n");
 
+        aboutTextView = findViewById(R.id.aboutTextView);
         aboutTextView.setText(infoBuffer);
 
     }
