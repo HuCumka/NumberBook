@@ -17,7 +17,7 @@ public:
 
     std::string getContact()
     {
-        return "{\n\"name\": \"" + this->name + "\",\n\"number\": \"" + this->number + "\",\n}";
+        return "{\n\"name\":\"" + this->name + "\",\n\"number\":\"" + this->number + "\"\n}";
     }
 };
 
@@ -30,61 +30,41 @@ std::vector<std::string> nameList = {"Денис",
                                      "Мама"};
 
 std::vector<std::string> numberList = {"+79545234145",
-                                       "+79204234327"
-                                       "+79514654625"
+                                       "+79204234327",
+                                       "+79514654625",
                                        "+79097547789",
-                                       "+79584647011"
+                                       "+79584647011",
                                        "+79616788332"};
 
-std::vector<Contact> contactList()
+
+static std::vector<Contact> createContactList()
 {
     std::vector<Contact> contacts;
     for(int i = 0; i < nameList.size(); i++)
     {
-        contacts.push_back(Contact(nameList[i], numberList[i]));
+        contacts.emplace_back(Contact(nameList[i], numberList[i]));
     }
 
     return contacts;
 }
 
 
-extern "C" JNIEXPORT jobjectArray JNICALL
-Java_com_dominigames_numberbook_MainActivity_contact_1name_1list(JNIEnv* env, jobject jobj) {
-    jobjectArray ret;
 
-    char *message[3]= {"Денис",
-                       "Сергей",
-                       "Артем"};
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_dominigames_numberbook_MainActivity_contactListAsJSONString(JNIEnv* env, jobject jobj)
+{
+    std::string contactJSONString = "{\"contacts\":[\n";
+    std::vector<Contact> contactList = createContactList();
 
-    ret = (jobjectArray)env->NewObjectArray(3,
-                                            env->FindClass("java/lang/String"),
-                                            env->NewStringUTF(""));
-
-    for(int i = 0; i < 3; i++) {
-        env->SetObjectArrayElement(
-                ret,i,env->NewStringUTF(message[i]));
+    for(int i = 0; i < contactList.size(); i++)
+    {
+        contactJSONString += contactList[i].getContact() + ",\n\n";
     }
-    return(ret);
-}
 
-extern "C"
-JNIEXPORT jobjectArray JNICALL
-Java_com_dominigames_numberbook_MainActivity_contact_1number_1list
-        (JNIEnv *env, jobject jobj){
 
-    jobjectArray ret;
+    contactJSONString = contactJSONString.substr(0, contactJSONString.size() - 3);
 
-    char *message[3]= {"+79905523451",
-                       "+79503412445",
-                       "+79208567865"};
+    contactJSONString += "\n]\n}";
 
-    ret = (jobjectArray)env->NewObjectArray(3,
-                                           env->FindClass("java/lang/String"),
-                                           env->NewStringUTF(""));
-
-    for(int i = 0; i < 3; i++) {
-        env->SetObjectArrayElement(
-                ret,i,env->NewStringUTF(message[i]));
-    }
-    return(ret);
+    return env->NewStringUTF(contactJSONString.c_str());
 }

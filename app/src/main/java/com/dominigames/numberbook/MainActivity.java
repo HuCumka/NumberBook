@@ -14,6 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dominigames.numberbook.databinding.ActivityMainBinding;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +25,9 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView contactsRecycler;
     CategoryAdapter contactsAdapter;
-    MainActivity contacts;
     ImageView aboutImage;
+    JSONArray contactsListJSON;
+    List<Category> contactsList;
 
 
     static {
@@ -38,20 +43,27 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String[] contactNameList = contact_name_list();
-        String[] contactNumberList = contact_number_list();
-        List<Category> contactsList = new ArrayList<>();
-        for(int i = 0; i < 3; i++) {
-            contactsList.add(new Category(i + 1, contactNameList[i], contactNumberList[i]));
+
+        contactsList = new ArrayList<>();
+
+        try {
+            contactsListJSON = new JSONObject(contactListAsJSONString()).getJSONArray("contacts");
+            for(int i = 0; i < contactsListJSON.length(); i++){
+                contactsList.add(new Category(i + 1, contactsListJSON.getJSONObject(i).getString("name"), contactsListJSON.getJSONObject(i).getString("number")));
+
+            }
+            setContactsRecycler(contactsList);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        setContactsRecycler(contactsList);
+
+
 
         aboutImage = findViewById(R.id.aboutButton);
         aboutImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Button");
                 Intent intent = new Intent(MainActivity.this, AboutDevicePage.class);
                 startActivity(intent);
             }
@@ -74,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
      * A native method that is implemented by the 'numberbook' native library,
      * which is packaged with this application.
      */
-    public native String[] contact_name_list();
 
-    public native String[] contact_number_list();
+    public native String contactListAsJSONString();
 }
